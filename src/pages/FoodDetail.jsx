@@ -3,10 +3,12 @@ import { useParams } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import { Heart, Star } from "lucide-react";
 import foods from "../data/FoodData";
+import { useNavigate } from "react-router-dom"; 
 
 const FoodDetail = () => {
   const [data, setData] = useState();
   const params = useParams();
+  const navigate = useNavigate(); 
   const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {

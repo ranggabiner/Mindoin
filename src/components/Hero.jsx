@@ -4,13 +4,12 @@ const Hero = () => {
   return (
     <div className="w-full h-[600px] relative">
       <img
-        src="/heros/hero-image_4-large.jpg"
+        src="/heros/food-large.jpg"
         className="absolute object-cover w-full h-full "
       />{" "}
       <div className="absolute flex px-4 flex-col gap-4 -translate-y-1/2 top-1/2 left-1/2 -translate-x-1/2">
-        <p className="text-white text-3xl text-center">
-          An Online Restaurant Guide That Helps You Find The Best Food and Place
-          to Eat
+        <p className="text-primary font-bold text-3xl text-center">
+        A Platform that Helps You Find the Best Betawi Food and Restaurant Places
         </p>
         <a
           href="#main"

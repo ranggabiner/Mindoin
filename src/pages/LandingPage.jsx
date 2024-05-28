@@ -5,18 +5,19 @@ import { Star } from "lucide-react";
 import CatalogueSection from "../components/CatalogueSection";
 import { useNavigate } from "react-router-dom";
 import foods from "../data/FoodData";
+import restaurants from "../data/RestaurantData";
 import Footer from "../components/Footer";
 
 const LandingPage = () => {
-  const [restaurants, setRestaurants] = useState([]);
+  // const [restaurants, setRestaurants] = useState([]);
   const [customerReviews, setCustomerReviews] = useState([]);
   const navigate = useNavigate();
 
-  const fetchData = async () => {
-    const response = await fetch("https://restaurant-api.dicoding.dev/list");
-    const data = await response.json();
-    setRestaurants(data.restaurants);
-  };
+  // const fetchData = async () => {
+  //   const response = await fetch("https://restaurant-api.dicoding.dev/list");
+  //   const data = await response.json();
+  //   setRestaurants(data.restaurants);
+  // };
 
   const fetchReviews = async () => {
     const urls = [
@@ -36,8 +37,9 @@ const LandingPage = () => {
       setCustomerReviews((prev) => [...prev, response.restaurant]);
     });
   };
+  
   useEffect(() => {
-    fetchData();
+    // fetchData();
     fetchReviews();
   }, []);
 
@@ -53,15 +55,15 @@ const LandingPage = () => {
               Featured Restaurants
             </h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {restaurants.slice(0, 8).map((restaurant) => (
+              {restaurants.slice(0, 4).map((restaurant) => (
                 <button
-                  key={restaurant.id}
-                  onClick={() => navigate(`/restaurant/${restaurant.id}`)}
-                  className="rounded-lg border-2 hover:border-primary duration-500 text-start overflow-hidden"
+                  key={restaurant.idRestaurant}
+                  onClick={() => navigate(`/food/${restaurant.idRestaurant}`)}
+                  className="border-2 hover:border-primary duration-500 text-start overflow-hidden rounded-lg"
                 >
                   <div className="relative group overflow-hidden">
                     <img
-                      src={`https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}`}
+                      src={restaurant.restaurantPicture}
                       alt={restaurant.name}
                       className="w-full h-[160px] group-hover:scale-110 duration-500  object-cover rounded-t-lg hover:"
                     />
@@ -75,25 +77,16 @@ const LandingPage = () => {
                       <a className="text-xl font-bold hover:cursor-pointer hover:underline duration-300">
                         {restaurant.name}
                       </a>
-
-                      <div className="text-yellow-400 font-bold text-yellow flex gap-1 items-center">
-                        <Star size={20} className="" fill="rgb(250,204,1)" />
-                        <p>{restaurant.rating}</p>
-                      </div>
                     </div>
                     <p className="line-clamp-4 text-sm text-tertiary mt-1">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ad corporis commodi, quibusdam itaque rem qui delectus
-                      quidem tempora voluptas id, eius sapiente deserunt
-                      adipisci accusantium soluta doloribus nihil cumque
-                      expedita.
+                      {restaurant.description}
                     </p>
                   </div>
                 </button>
               ))}
             </div>
             <a
-              href="/catalogue/restaurants"
+              href="/catalogue?type=restaurants"
               className="text-lg mx-auto active:translate-y-1 active:scale-90 font-medium duration-300 py-2 px-8 text-white bg-primary rounded-xl w-fit"
             >
               See All Restaurants
@@ -134,7 +127,7 @@ const LandingPage = () => {
               ))}
             </div>
             <a
-              href="/catalogue/foods"
+              href="/catalogue?type=foods"
               className="text-lg mx-auto active:translate-y-1 active:scale-90 font-medium duration-300 py-2 px-8 text-white bg-primary rounded-xl w-fit"
             >
               See All Foods
@@ -170,7 +163,7 @@ const LandingPage = () => {
               <p className="text-center group-hover:text-black text-white font-bold">
                 {restaurant.customerReviews[0].review}
               </p>
-              <div className="font-medium text-end text-[#00c2cb]">
+              <div className="font-medium text-end text-[#d74f24]">
                 <p>{restaurant.customerReviews[0].name}</p>
               </div>
             </div>

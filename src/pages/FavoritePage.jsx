@@ -20,7 +20,7 @@ const FavoritePage = () => {
         <div className="relative">
           <img
             className="h-[120px] object-cover w-full"
-            src="/heros/hero-image_2-small.jpg"
+            src="/heros/burger-small.jpg"
           />
           <h1 className="text-4xl font-bold text-white absolute -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/2">
             Favorite

@@ -1,41 +1,54 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import foods from "../data/FoodData";
+import restaurants from "../data/RestaurantData";
 import { Search, Star } from "lucide-react";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"; // Import useNavigate
 
 const CataloguePage = () => {
-  const [originalRestaurants, setOriginalRestaurants] = useState([]);
-  const [restaurants, setRestaurants] = useState([]);
+  // const [originalRestaurants, setOriginalRestaurants] = useState([]);
+  // const [restaurants, setRestaurants] = useState([]);
   const [searchCategory, setSearchCategory] = useState("restaurant");
   const [searchQuery, setSearchQuery] = useState("");
   const [foodsData, setFoodsData] = useState(foods);
+  const navigate = useNavigate(); // Define navigate
+  const [restaurantsData, setRestaurantsData] = useState(restaurants);
+  const [searchParams, setSearchParams]= useSearchParams()
+  
+  useEffect(() => {
+    const type = searchParams.get("type")
+    if(type === "foods" || type=== "restaurants"){
+      setTimeout(() => {
+        document.getElementById(type).scrollIntoView()
+      },300)
+    }
 
-  const fetchData = async () => {
-    const response = await fetch("https://restaurant-api.dicoding.dev/list");
-    const data = await response.json();
+  },[])
 
-    setRestaurants(data.restaurants);
-    setOriginalRestaurants(data.restaurants);
-  };
+  // const fetchData = async () => {
+  //   const response = await fetch("https://restaurant-api.dicoding.dev/list");
+  //   const data = await response.json();
 
-  const filteredRestaurants = async () => {
-    document.getElementById("restaurants").scrollIntoView(true);
+  //   setRestaurants(data.restaurants);
+  //   setOriginalRestaurants(data.restaurants);
+  // };
 
+  const filteredRestaurants = () => {
     if (searchQuery === "") {
-      setRestaurants(originalRestaurants);
+      setRestaurantsData(restaurants);
       return;
     }
-    const response = await fetch(
-      `https://restaurant-api.dicoding.dev/search?q=${searchQuery}`
-    );
-    const data = await response.json();
 
-    setRestaurants(data.restaurants);
+    const filteredRestaurants = restaurants.filter((restaurant) =>
+      restaurant.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
+    setRestaurantsData(filteredRestaurants);
+    document.getElementById("restaurants").scrollIntoView(true); // Move scrollIntoView here
   };
 
-  const filteredFoods = () => {
-    document.getElementById("foods").scrollIntoView(true);
 
+  const filteredFoods = () => {
     if (searchQuery === "") {
       setFoodsData(foods);
       return;
@@ -46,9 +59,11 @@ const CataloguePage = () => {
     );
 
     setFoodsData(filteredFoods);
+    document.getElementById("foods").scrollIntoView(true); // Move scrollIntoView here
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (searchCategory === "restaurant") {
       filteredRestaurants();
     } else {
@@ -56,12 +71,9 @@ const CataloguePage = () => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  // Aktifitas Mimiw
-  // olahraga, portfolio, lomba (5 Juni), bimbingan, main sama kaisha, meeting propsal, kerkel
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   return (
     <div className="pt-[100px]">
@@ -70,7 +82,7 @@ const CataloguePage = () => {
         <div className="relative">
           <img
             className="h-[120px] object-cover w-full"
-            src="/heros/hero-image_1-small.jpg"
+            src="/heros/chef-small.jpg"
           />
           <h1 className="text-4xl font-bold text-white absolute -translate-x-1/2 top-1/2 left-1/2 -translate-y-1/2">
             Catalogue
@@ -78,13 +90,7 @@ const CataloguePage = () => {
         </div>
         <div className="w-[85%] mx-auto flex flex-col gap-9">
           <div className="p-4 rounded-2xl border-2 flex flex-col gap-3 items-start">
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleSubmit();
-              }}
-              className="w-full"
-            >
+            <form onSubmit={handleSubmit} className="w-full">
               <div className="flex w-full gap-4">
                 <input
                   value={searchQuery}
@@ -99,22 +105,16 @@ const CataloguePage = () => {
             </form>
             <div className="flex gap-4">
               <button
-                onClick={() => {
-                  setSearchCategory("restaurant");
-                }}
+                onClick={() => setSearchCategory("restaurant")}
                 className={`py-2 px-4 active:scale-90 duration-500 rounded-2xl ${
-                  searchCategory === "restaurant"
-                    ? "bg-primary "
-                    : "bg-gray-400"
+                  searchCategory === "restaurant" ? "bg-primary " : "bg-gray-400"
                 } text-white`}
               >
                 Restaurant
               </button>
               <button
-                onClick={() => {
-                  setSearchCategory("food");
-                }}
-                className={`py-2 px-4 active:scale-90 duration-500 rounded-2xl  ${
+                onClick={() => setSearchCategory("food")}
+                className={`py-2 px-4 active:scale-90 duration-500 rounded-2xl ${
                   searchCategory === "food" ? "bg-primary " : "bg-gray-400"
                 } text-white`}
               >
@@ -126,17 +126,17 @@ const CataloguePage = () => {
           <div id="restaurants" className="flex flex-col gap-6">
             <h1 className="text-3xl font-bold text-center">Restaurants</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {restaurants.map((restaurant) => (
+              {restaurantsData.map((restaurant) => (
                 <button
-                  key={restaurant.id}
-                  onClick={() => navigate(`/restaurant/${restaurant.id}`)}
-                  className="rounded-lg border-2 text-start overflow-hidden"
+                  key={restaurant.idRestaurant}
+                  onClick={() => navigate(`/restaurant/${restaurant.idRestaurant}`)}
+                  className="border-2 text-start overflow-hidden rounded-lg"
                 >
-                  <div className="relative group overflow-hidden">
+                  <div className="w-full relative h-[160px] group overflow-hidden">
                     <img
-                      src={`https://restaurant-api.dicoding.dev/images/small/${restaurant.pictureId}`}
+                      src={restaurant.restaurantPicture}
                       alt={restaurant.name}
-                      className="w-full h-[160px] group-hover:scale-110 duration-500  object-cover rounded-t-lg hover:"
+                      className="w-full h-[160px] group-hover:scale-110 duration-500 object-cover rounded-t-lg"
                     />
                     <p className="block absolute bg-primary text-white rounded-full p-2 text-xs font-semibold bottom-3 left-2">
                       {restaurant.city}
@@ -144,22 +144,13 @@ const CataloguePage = () => {
                   </div>
 
                   <div className="p-5 pt-4 bg-white">
-                    <div className="flex justify-between  items-center">
+                    <div className="flex justify-between items-center">
                       <a className="text-xl font-bold hover:cursor-pointer hover:underline duration-300">
                         {restaurant.name}
                       </a>
-
-                      <div className="text-yellow-400 font-bold text-yellow flex gap-1 items-center">
-                        <Star size={20} className="" fill="rgb(250,204,1)" />
-                        <p>{restaurant.rating}</p>
-                      </div>
                     </div>
                     <p className="line-clamp-4 text-sm text-tertiary mt-1">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Ad corporis commodi, quibusdam itaque rem qui delectus
-                      quidem tempora voluptas id, eius sapiente deserunt
-                      adipisci accusantium soluta doloribus nihil cumque
-                      expedita.
+                      {restaurant.description}
                     </p>
                   </div>
                 </button>
@@ -168,7 +159,7 @@ const CataloguePage = () => {
           </div>
 
           <div id="foods" className="flex flex-col gap-6">
-            <h1 className="text-3xl mt-8 font-bold text-center">Foods</h1>
+            <h1 className="text-3xl font-bold text-center">Foods</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {foodsData.map((food) => (
                 <button
@@ -176,11 +167,11 @@ const CataloguePage = () => {
                   onClick={() => navigate(`/food/${food.idMeal}`)}
                   className="border-2 text-start overflow-hidden rounded-lg"
                 >
-                  <div className="relative group overflow-hidden">
+                  <div className="w-full relative h-[160px] group overflow-hidden">
                     <img
                       src={food.strMealThumb}
                       alt={food.strMeal}
-                      className="w-full h-[160px] group-hover:scale-110 duration-500  object-cover rounded-t-lg hover:"
+                      className="w-full h-[160px] group-hover:scale-110 duration-500 object-cover rounded-t-lg"
                     />
                     <p className="block absolute bg-primary text-white rounded-full p-2 text-xs font-semibold bottom-3 left-2">
                       {food.strArea}
@@ -188,7 +179,7 @@ const CataloguePage = () => {
                   </div>
 
                   <div className="p-5 pt-4 bg-white">
-                    <div className="flex justify-between  items-center">
+                    <div className="flex justify-between items-center">
                       <a className="text-xl font-bold hover:cursor-pointer hover:underline duration-300">
                         {food.strMeal}
                       </a>

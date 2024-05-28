@@ -1,5 +1,5 @@
 {
-  "name": "yoomy-react",
+  "name": "pjbl-kel2",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -13,7 +13,8 @@
     "lucide-react": "^0.379.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.23.1"
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "^3.0.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
